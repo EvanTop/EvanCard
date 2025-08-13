@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evan Business Card</title>
+    <style>
+        :root{
+            --bg:linear-gradient(120deg,#fdfbfb 0%,#ebedee 100%);
+            --editor-bg:#282c34;
+            --title-bar-bg:#21252b;
+            --title-bar-border:#181a1f;
+            --title-bar-separator:#3a3f4b;
+            --text-color:#abb2bf;
+            --line-number-color:#636d83;
+            --key-color:#f92672;
+            --string-color:#FDE047;
+            --brace-color:#abb2bf;
+            --control-close:#ff5f56;
+            --control-minimize:#ffbd2e;
+            --control-maximize:#27c93f;
+        }
+        body.dark{
+            --bg:#121212;
+            --editor-bg:#1e1e1e;
+            --title-bar-bg:#252526;
+            --title-bar-border:#3e3e42;
+            --title-bar-separator:#3e3e42;
+            --text-color:#cccccc;
+            --line-number-color:#858585;
+            --key-color:#9cdcfe;
+            --string-color:#ce9178;
+            --brace-color:#cccccc;
+            --control-close:#f44747;
+            --control-minimize:#ffcc02;
+            --control-maximize:#4caf50;
+        }
+        body{
+            display:flex;justify-content:center;align-items:center;min-height:100vh;
+            background:var(--bg);font-family:sans-serif;margin:0;transition:background .3s;
+            -webkit-user-select:none;-ms-user-select:none;user-select:none;
+        }
+        .editor-window{
+            width:400px;background:var(--editor-bg);border-radius:10px;
+            box-shadow:0 10px 30px rgba(0,0,0,.2);overflow:hidden;transition:background .3s;
+        }
+        .title-bar{padding:0;background:var(--title-bar-bg);
+            border-bottom:1px solid var(--title-bar-border);transition:background .3s,border .3s;}
+        .title-bar-row-1{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;}
+        .controls{display:flex;gap:8px;}
+        .control{width:10px;height:10px;border-radius:50%;cursor:pointer;
+            transition:background .3s;}
+        .close{background:var(--control-close);}
+        .minimize{background:var(--control-minimize);}
+        .maximize{background:var(--control-maximize);}
+        .title{flex-grow:1;text-align:center;color:var(--text-color);font-size:14px;transition:color .3s;}
+        .menu-dots{display:flex;align-items:center;}
+        .theme-toggle{background:none;border:none;cursor:pointer;color:var(--text-color);
+            padding:0;display:flex;align-items:center;justify-content:center;transition:color .3s;}
+        .theme-toggle svg{width:16px;height:16px;fill:currentColor;}
+        .editor-content{display:flex;padding:12px;font-family:'SF Mono','Consolas','Menlo',monospace;
+            font-size:12px;line-height:1.4;}
+        .line-numbers{color:var(--line-number-color);padding-right:12px;text-align:right;transition:color .3s;}
+        .line-numbers span{display:block;}
+        .code-area{margin:0;flex-grow:1;color:var(--text-color);white-space:pre;transition:color .3s;}
+        .code-area .brace{color:var(--brace-color);transition:color .3s;}
+        .code-area .key{color:var(--key-color);font-size:14px;transition:color .3s;}
+        .code-area .string{color:var(--string-color);font-size:14px;transition:color .3s;}
+        .blinking-cursor{font-weight:normal;animation:blink 1s step-end infinite;margin-left:1px;
+            color:var(--text-color);display:inline-block;transition:color .3s;}
+        @keyframes blink{from,to{opacity:1}50%{opacity:0}}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+    <div class="editor-window">
+        <div class="title-bar">
+            <div class="title-bar-row-1">
+                <div class="controls">
+                    <span class="control close"></span>
+                    <span class="control minimize"></span>
+                    <span class="control maximize" onclick="window.open('https://evan.xin','_blank')"></span>
+                </div>
+                <div class="title">evan_business_card.json</div>
+                <div class="menu-dots">
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+                        <!-- sun -->
+                        <svg class="sun-icon" style="display:none" viewBox="0 0 24 24">
+                            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>
+                        </svg>
+                        <!-- moon -->
+                        <svg class="moon-icon" viewBox="0 0 24 24">
+                            <path d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.532a.75.75 0 01.818.162z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="editor-content">
+            <div class="line-numbers">
+                <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span>
+            </div>
+            <pre class="code-area"><code><span class="brace">{</span>
+    <span class="key">"Name"</span>: <span class="string">"Evan"</span>,
+    <span class="key">"Title"</span>: <span class="string">" Designer"</span>,
+    <span class="key">"Email"</span>: <span class="string">"hi@evan.xin"</span>,
+    <span class="key">"Link"</span>: <span class="string">"www.evan.xin"</span>
+    <span class="key">"Tencent QQ"</span>: <span class="string">"22686871"</span><span class="blinking-cursor">|</span>
+<span class="brace">}</span></code></pre>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            document.addEventListener('contextmenu',e=>e.preventDefault());
+            const toggle=document.getElementById('theme-toggle');
+            const body=document.body;
+            const sun=document.querySelector('.sun-icon');
+            const moon=document.querySelector('.moon-icon');
+            const dark=localStorage.getItem('darkMode')==='true';
+            if(dark){body.classList.add('dark');sun.style.display='block';moon.style.display='none';}
+            toggle.addEventListener('click',()=>{
+                body.classList.toggle('dark');
+                const isDark=body.classList.contains('dark');
+                localStorage.setItem('darkMode',isDark);
+                sun.style.display=isDark?'block':'none';
+                moon.style.display=isDark?'none':'block';
+            });
+
+            const closeBtn=document.querySelector('.control.close');
+            if(closeBtn){
+                closeBtn.addEventListener('click',()=>{
+                    const dur=5*1000,end=Date.now()+dur,def={startVelocity:30,spread:360,ticks:60,zIndex:1000};
+                    const rand=(m,n)=>Math.random()*(n-m)+m;
+                    const iv=setInterval(()=>{
+                        const left=end-Date.now();
+                        if(left<=0)return clearInterval(iv);
+                        const n=50*(left/dur);
+                        if(typeof confetti==='function'){
+                            confetti(Object.assign({},def,{particleCount:n,origin:{x:rand(.1,.3),y:Math.random()-.2}}));
+                            confetti(Object.assign({},def,{particleCount:n,origin:{x:rand(.7,.9),y:Math.random()-.2}}));
+                        }else{clearInterval(iv);}
+                    },250);
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
