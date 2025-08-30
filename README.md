@@ -25,9 +25,6 @@ EvanCard是一个超极简而精致的仿编程页面的在线信息卡片，可
 
 ---
 
-|晴天模式 | 暗夜模式|
-|--- | ---|
-|![image\|548x289](https://i.imgur.com/lqkWUkr.png)  | ![image\|548x289](https://i.imgur.com/rMprdTE.png)|
 
 
 - 公众号：
